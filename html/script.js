@@ -29,16 +29,14 @@ function generateGrid() {
     let cols = currentConfig.GridSize.cols;
     totalPairs = (rows * cols) / 2;
 
-    // Set Grid CSS
     $('#memory-grid').css({
         'grid-template-columns': `repeat(${cols}, 70px)`,
         'grid-template-rows': `repeat(${rows}, 70px)`
     });
 
-    // Prepare Icon List
     let iconsToUse = currentConfig.Icons.sort(() => 0.5 - Math.random()).slice(0, totalPairs);
-    let cardValues = [...iconsToUse, ...iconsToUse]; // Duplicate for pairs
-    cardValues.sort(() => 0.5 - Math.random()); // Shuffle
+    let cardValues = [...iconsToUse, ...iconsToUse];
+    cardValues.sort(() => 0.5 - Math.random());
 
     let board = $('#memory-grid').empty();
 
@@ -78,7 +76,6 @@ function checkMatch() {
     let icon2 = card2.data('icon');
 
     if (icon1 === icon2) {
-        // MATCH FOUND
         card1.addClass('matched');
         card2.addClass('matched');
         matchedPairs++;
@@ -89,13 +86,12 @@ function checkMatch() {
             winGame();
         }
     } else {
-        // NO MATCH
         setTimeout(() => {
             card1.removeClass('flipped');
             card2.removeClass('flipped');
             flippedCards = [];
             isProcessing = false;
-        }, 800); // Delay before flipping back
+        }, 800);
     }
 }
 

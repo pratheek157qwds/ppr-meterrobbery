@@ -75,7 +75,6 @@ body {
     perspective: 1000px;
 }
 
-/* FLIP CARD STYLING */
 .card {
     width: var(--card-size);
     height: var(--card-size);
