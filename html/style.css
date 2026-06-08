@@ -1,0 +1,114 @@
+:root {
+    --primary: #00f0ff;
+    --bg-dark: rgba(10, 15, 20, 0.95);
+    --grid-gap: 8px;
+    --card-size: 70px;
+}
+
+body {
+    margin: 0; overflow: hidden; user-select: none;
+    font-family: 'Share Tech Mono', monospace;
+    background: transparent;
+}
+
+#game-container {
+    width: 100vw; height: 100vh;
+    display: flex; justify-content: center; align-items: center;
+}
+
+.game-panel {
+    background: var(--bg-dark);
+    padding: 30px 40px;
+    border: 2px solid var(--primary);
+    border-radius: 4px;
+    box-shadow: 0 0 60px rgba(0, 240, 255, 0.15);
+    text-align: center;
+    color: var(--primary);
+    position: relative;
+}
+
+.header { margin-bottom: 25px; width: 100%; }
+
+.title-box {
+    font-size: 28px; margin-bottom: 15px;
+    text-shadow: 0 0 10px var(--primary);
+    letter-spacing: 3px; font-weight: bold;
+}
+
+.timer-bar {
+    width: 100%; height: 6px; 
+    background: rgba(255,255,255,0.1); 
+    border-radius: 2px; overflow: hidden;
+}
+#timer-fill {
+    width: 100%; height: 100%; 
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+    transition: width 1s linear;
+}
+
+.grid-wrapper {
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.05);
+    display: inline-block;
+}
+
+#memory-grid {
+    display: grid;
+    gap: var(--grid-gap);
+    perspective: 1000px;
+}
+
+/* FLIP CARD STYLING */
+.card {
+    width: var(--card-size); height: var(--card-size);
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.4s;
+}
+
+.card:hover { transform: scale(1.05); }
+.card.flipped { transform: rotateY(180deg); cursor: default; }
+.card.matched { opacity: 0.5; cursor: default; }
+
+.card-face {
+    position: absolute;
+    width: 100%; height: 100%;
+    backface-visibility: hidden;
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 4px;
+    font-size: 28px;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.card-front {
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--primary);
+    transform: rotateY(180deg); /* Hidden content */
+    background: rgba(0, 30, 40, 0.9);
+}
+
+.card-back {
+    background: rgba(255,255,255,0.05); /* Cover */
+    color: transparent;
+}
+.card-back::after {
+    content: '?';
+    color: rgba(255,255,255,0.1);
+    font-size: 24px;
+}
+
+.footer {
+    margin-top: 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 15px;
+}
+
+.instruction { opacity: 0.8; letter-spacing: 1px; }
+.status { color: var(--primary); text-shadow: 0 0 5px var(--primary); font-weight: bold; }
