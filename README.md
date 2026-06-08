@@ -106,3 +106,10 @@ You can customize the script behavior by editing [config.lua](file:///c:/Users/p
 - Created by **Pratheek**
 - UI Design: Modern share tech mono cyberpunk UI
 - Feel free to modify the source code to fit your roleplay environment needs!
+
+---
+
+## 🙋‍♂️ Support
+If you need any help or have questions regarding this resource, feel free to reach out via Discord:
+- **Discord Username**: `pratheekreddy`
+
