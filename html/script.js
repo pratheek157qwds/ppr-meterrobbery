@@ -6,12 +6,12 @@ let matchedPairs = 0;
 let totalPairs = 0;
 let isProcessing = false;
 
-window.addEventListener('message', function(event) {
+window.addEventListener('message', function (event) {
     if (event.data.action === "startMemoryGame") {
         currentConfig = event.data.config;
         startGame();
         $('#game-container').fadeIn(200);
-    } 
+    }
 });
 
 function startGame() {
@@ -19,7 +19,7 @@ function startGame() {
     matchedPairs = 0;
     flippedCards = [];
     isProcessing = false;
-    
+
     generateGrid();
     startTimer(currentConfig.TimeLimit);
 }
@@ -28,7 +28,7 @@ function generateGrid() {
     let rows = currentConfig.GridSize.rows;
     let cols = currentConfig.GridSize.cols;
     totalPairs = (rows * cols) / 2;
-    
+
     // Set Grid CSS
     $('#memory-grid').css({
         'grid-template-columns': `repeat(${cols}, 70px)`,
@@ -41,7 +41,7 @@ function generateGrid() {
     cardValues.sort(() => 0.5 - Math.random()); // Shuffle
 
     let board = $('#memory-grid').empty();
-    
+
     cardValues.forEach((iconClass, index) => {
         let card = $(`
             <div class="card" data-id="${index}" data-icon="${iconClass}">
@@ -49,11 +49,11 @@ function generateGrid() {
                 <div class="card-face card-front"><i class="fas ${iconClass}"></i></div>
             </div>
         `);
-        
-        card.click(function() {
+
+        card.click(function () {
             handleCardClick($(this));
         });
-        
+
         board.append(card);
     });
 }
@@ -102,12 +102,12 @@ function checkMatch() {
 function startTimer(seconds) {
     if (gameTimer) clearInterval(gameTimer);
     let total = seconds;
-    
+
     gameTimer = setInterval(() => {
         seconds--;
         let percent = (seconds / total) * 100;
         $('#timer-fill').css('width', percent + '%');
-        
+
         if (seconds <= 0) {
             clearInterval(gameTimer);
             fail();
@@ -119,13 +119,13 @@ function winGame() {
     clearInterval(gameTimer);
     $('#game-status').text("ACCESS GRANTED").css('color', '#32ff7e');
     setTimeout(() => {
-        $.post('https://ppr-meter-robbery/win', JSON.stringify({}));
+        $.post('https://ssrp-meterrobbery/win', JSON.stringify({}));
         $('#game-container').fadeOut();
     }, 1000);
 }
 
 function fail() {
-    $.post('https://ppr-meter-robbery/fail', JSON.stringify({}));
+    $.post('https://ssrp-meterrobbery/fail', JSON.stringify({}));
     $('#game-container').fadeOut();
-    if(gameTimer) clearInterval(gameTimer);
+    if (gameTimer) clearInterval(gameTimer);
 }

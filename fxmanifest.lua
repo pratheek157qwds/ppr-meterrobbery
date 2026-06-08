@@ -2,7 +2,7 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'Pratheek'
-description 'PPR Parking Meter Robbery'
+description 'SSRP Parking Meter Robbery'
 version '1.0.0'
 
 shared_scripts { 'config.lua' }
@@ -19,6 +19,5 @@ files {
 }
 
 dependencies {
-    'qb-core',
-    'qb-context'
+    'qb-core'
 }

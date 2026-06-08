@@ -6,39 +6,77 @@ CreateThread(function()
         options = {
             {
                 type = "client",
-                event = "ppr-meter:client:attemptRobbery",
+                event = "ssrp-meter:client:attemptRobbery",
                 icon = "fas fa-microchip",
                 label = "Hack Meter",
-                item = Config.RequiredItem
+                canInteract = function()
+                    local pData = QBCore.Functions.GetPlayerData()
+                    if not pData or not pData.items then return false end
+                    for _, i in pairs(pData.items) do
+                        if i.name == 'lockpick' then return true end
+                        if Config.EnableToolset and i.name == 'toolset' then return true end
+                    end
+                    return false
+                end
             },
         },
         distance = 1.5
     })
 end)
 
-RegisterNetEvent('ppr-meter:client:attemptRobbery', function(data)
+local currentItemUsed = nil
+RegisterNetEvent('ssrp-meter:client:attemptRobbery', function(data)
     if robbing then return end
     local entity = data.entity
     local coords = GetEntityCoords(entity)
 
-    QBCore.Functions.TriggerCallback('ppr-meter:server:checkItem', function(hasItem)
+    QBCore.Functions.TriggerCallback('ssrp-meter:server:checkItem', function(hasItem, itemName)
         if not hasItem then 
-            QBCore.Functions.Notify("You need a "..Config.RequiredItem, "error")
+            QBCore.Functions.Notify("You need the proper tools", "error")
             return 
         end
+        currentItemUsed = itemName
 
-        QBCore.Functions.TriggerCallback('ppr-meter:server:checkCooldown', function(canRob)
+        QBCore.Functions.TriggerCallback('ssrp-meter:server:checkCooldown', function(canRob)
             if not canRob then
                 QBCore.Functions.Notify("System Rebooting...", "error")
                 return
             end
-            StartRobbery(coords)
+            StartRobbery(coords, itemName)
         end, coords)
     end)
 end)
 
-function StartRobbery(coords)
+function StartRobbery(coords, itemName)
     robbing = true
+
+    if math.random(1, 100) <= Config.PoliceCallChance then
+        local streetHash = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
+        local street = GetStreetNameFromHashKey(streetHash)
+        
+        local dispatchData = {
+            title = "Meter Robbery",
+            code = "10-90",
+            location = street,
+            description = "Someone tampering with a parking meter",
+            type = "Alert",
+            x = coords.x,
+            y = coords.y,
+            z = coords.z,
+            sound = "dispatch",
+            jobs = { 
+                police = true
+            },
+            blip = {
+                radius = 0,
+                sprite = 58,
+                color = 1,
+                scale = 1.0,
+                length = 2,
+            }
+        }
+        TriggerServerEvent('kartik-mdt:server:sendDispatchNotification', dispatchData)
+    end
     
     RequestAnimDict("anim@heists@ornate_bank@hack")
     while not HasAnimDictLoaded("anim@heists@ornate_bank@hack") do Wait(10) end
@@ -48,7 +86,7 @@ function StartRobbery(coords)
     
     SendNUIMessage({
         action = "startMemoryGame",
-        config = Config.MemoryGame
+        config = Config.HackSettings[itemName]
     })
 end
 
@@ -70,7 +108,7 @@ RegisterNUICallback('fail', function()
     exports['ps-dispatch']:CustomAlert(dispatchData)
 
     QBCore.Functions.Notify("Connection Failed!", "error")
-    TriggerServerEvent('ppr-meter:server:removeItem')
+    TriggerServerEvent('ssrp-meter:server:removeItem', currentItemUsed)
 end)
 
 RegisterNUICallback('win', function()
@@ -88,8 +126,8 @@ RegisterNUICallback('win', function()
     
     if meter ~= 0 then
         local meterLoc = GetEntityCoords(meter)
-        TriggerServerEvent('ppr-meter:server:reward', meterLoc)
+        TriggerServerEvent('ssrp-meter:server:reward', meterLoc)
     else
-        TriggerServerEvent('ppr-meter:server:reward', coords)
+        TriggerServerEvent('ssrp-meter:server:reward', coords)
     end
 end)
